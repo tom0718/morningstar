@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <object th:replace="/common/include"></object>
+    <title>MMS 관리자</title>
+    <link href="/css/demo.css" rel="stylesheet"/>
+    <style>
+        #calendar {
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        #calendar th, #calendar td {
+            width: 14%;
+        }
+        .control-span {
+            border: none;
+        }
+        #rentStartTime, #rentEndTime, #department {
+            width: 40%;
+        }
+        .gender-div {
+            margin-left: 15px;
+        }
+
+    </style>
+</head>
+
+<body class="">
+<div class="wrapper ">
+
+    <div th:replace="/include/slidebar"></div>
+
+    <div class="main-panel">
+
+        <div th:replace="/include/navbar"></div>
+
+        <div class="content">
+            <div class="row">
+
+                <div id='calendar'></div>
+
+            </div>
+        </div>
+
+        <footer th:replace="/include/footer"></footer>
+
+    </div>
+</div>
+<div th:replace="/room/event_modal"></div>
+<script src="/js/room_main.js"></script>
+</body>
+<script th:inline="javascript">
+    /* <![CDATA[ */
+    const _auth = /*[[${session.mms.part}]]*/;
+    const _id = /*[[${session.mms.id}]]*/;
+    /* ]]> */
+</script>
+
+</html>

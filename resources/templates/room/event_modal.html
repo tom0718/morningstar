@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div class="modal fade" id="event-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">룸대여 신청</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="department" class="col-form-label">부서선택:</label>
+                        <div class="form-inline">
+                            <select class="form-control select" id="department" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_PASTOR','ROLE_MANAGER')">
+                                <option th:each="list:${departmentList}" th:value="${list.id}" th:text="${list.name}">가정국</option>
+                            </select>
+                            <div class="form-inline gender-div" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_PASTOR','ROLE_MANAGER')">
+                                <label class="form-check-inline"><input type="checkbox" class="form-check-input" id="male" value="M">&nbsp;남</label>
+                                <label class="form-check-inline"><input type="checkbox" class="form-check-input" id="female" value="F">&nbsp;여</label>
+                            </div>
+                            <select class="form-control select" id="department" sec:authorize="hasAnyRole('ROLE_STAFF')">
+                                <option th:each="list:${sessionUser.roleList}" th:value="${list.seqNo}" th:text="|${list.department.name}-${list.male eq true ? '남' : '여'}|">가정국</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="roomName" class="col-form-label">신청룸:</label>
+                        <select class="form-control select" id="roomName">
+                            <option value="S1">S1</option>
+                            <option value="S2">S2</option>
+                            <option value="S3">S3</option>
+                            <option value="S4">S4</option>
+                            <option value="S5">S5</option>
+                            <option value="S6">S6</option>
+                            <option value="S7">S7</option>
+                            <option value="중예배실">중예배실</option>
+                            <option value="응접실">응접실</option>
+                            <option value="VIP">VIP</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="rentDate" class="col-form-label">신청일:</label>
+                        <input type="date" class="form-control" id="rentDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="rentTimeDiv" class="col-form-label">사용시간:</label>
+                        <div class="form-inline" id="rentTimeDiv">
+                            <select class="form-control select" id="rentStartTime">
+                                <option th:each="list,i:${#numbers.sequence(0,47,1)}" th:value="|${list/2 < 10 ? '0'+list/2 : list/2}:${i.odd ? '00:00': '30:00'}|" th:text="|${list/2 < 10 ? '0'+list/2 : list/2}:${i.odd ? '00': '30'}|">12:00</option>
+                            </select>
+                            <span class="form-control control-span"> ~ </span>
+                            <select class="form-control select" id="rentEndTime">
+                                <option th:each="list,i:${#numbers.sequence(1,48,1)}" th:value="|${list/2 < 10 ? '0'+list/2 : list/2}:${i.even ? '00:00': '30:00'}|" th:text="|${list/2 < 10 ? '0'+list/2 : list/2}:${i.even ? '00': '30'}|">12:00</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="purpose" class="col-form-label">사용목적:</label>
+                        <input class="form-control" id="purpose" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" id="requestRoom">룸신청</button>
+                <button type="button" class="btn btn-danger" id="cancelRoom">취소</button>
+                <button type="button" class="btn btn-success" id="completeRoom">사용완료</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

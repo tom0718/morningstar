@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<object th:replace="/common/include"></object>
+<title>새벽별</title>
+	<style>
+		body{
+			background-color:#f4f3ef;
+			font-size:14px;
+			color: #13288e;
+		}
+		.simple-login-container{
+			width:300px;
+			max-width:100%;
+			margin:50px auto;
+		}
+		.simple-login-container h2{
+			text-align:center;
+			font-size:20px;
+		}
+
+		.simple-login-container .btn-login{
+			background-color: #5975ff;
+			color:#fff;
+		}
+		a{
+			color:#fff;
+		}
+		.warning {
+			color:red;
+		}
+		#findId, #findPwd {
+			cursor: pointer;
+		}
+
+	</style>
+</head>
+<body>
+<form name='f' method="post" action="/login">
+	<div class="simple-login-container">
+		<h2>MMS Login</h2>
+		<div class="row">
+			<div class="col-md-12 form-group">
+				<input type="text" name="username" id="username" class="form-control" placeholder="아이디를 입력하세요.">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 form-group">
+				<input type="password" name="password" id="password" placeholder="비밀번호를 입력하세요." class="form-control">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 form-group">
+				<button type="submit" class="btn btn-block btn-login" id="login">로그인</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 form-group text-center">
+				<p id="findId">아이디 찾기</p>
+			</div>
+			<div class="col-md-6 form-group text-center">
+				<p id="findPwd">비밀번호 찾기</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<p th:if="${param.error}" class="warning" th:inline="text">&nbsp;&nbsp; * [[${param.error}]]</p>
+				<p th:if="${param.password}" class="warning" th:inline="text">&nbsp;&nbsp; * 비밀번호 [[${param.password}]]회 오류(6회이상시 계정잠김.)</p>
+				<p th:if="${param.hold}" class="warning">&nbsp;&nbsp; * 비밀번호 오류로 계정잠김. 관리자 문의</p>
+				<p th:if="${param.stop}" class="warning">&nbsp;&nbsp; * 사용이 정지된 계정입니다. 관리자 문의</p>
+				<p th:if="${param.auth}" class="warning">&nbsp;&nbsp; * 접근권한이 없습니다.</p>
+			</div>
+		</div>
+	</div>
+</form>
+<div th:replace="/user/find_modal"></div>
+<script src="/js/login.js"></script>
+</body>
+</html>

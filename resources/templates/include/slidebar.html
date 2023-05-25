@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="sidebar" data-color="white" data-active-color="danger">
+    <div class="logo">
+        <a href="javascript:;" class="simple-text logo-mini">
+            <i class="nc-icon nc-circle-10" style="font-size: 33px;"></i>
+            <p>Icons</p>
+        </a>
+        <a href="javascript:;" class="simple-text logo-normal">
+            MMS
+        </a>
+    </div>
+    <div class="sidebar-wrapper">
+        <ul class="nav">
+            <li th:classappend="${navi eq 'dashboard' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_ADMIN','ROLE_PASTOR')">
+                <a href="/dashboard">
+                    <i class="nc-icon nc-bank"></i>
+                    <p>Dashboard</p>
+                </a>
+            </li>
+            <li th:classappend="${navi eq 'room' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_MANAGER','ROLE_STAFF','ROLE_PASTOR')">
+                <a href="/room/main">
+                    <i class="nc-icon nc-caps-small"></i>
+                    <p>룸신청 관리</p>
+                </a>
+            </li>
+            <!--
+            <li th:classappend="${navi eq 'user' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_STAFF','ROLE_PASTOR')">
+                <a href="/user/list">
+                    <i class="nc-icon nc-single-02"></i>
+                    <p>회원 관리</p>
+                </a>
+            </li>
+            <li th:classappend="${navi eq 'userList' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_MANAGER')">
+                <a href="/userList">
+                    <i class="nc-icon nc-single-02"></i>
+                    <p>회원 조회</p>
+                </a>
+            </li>
+            <li th:classappend="${navi eq 'attend' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_MANAGER','ROLE_STAFF','ROLE_PASTOR')">
+                <a href="/attend/list">
+                    <i class="nc-icon nc-caps-small"></i>
+                    <p>출석 관리</p>
+                </a>
+            </li>
+            -->
+            <li th:classappend="${navi eq 'word' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_WORD','ROLE_PASTOR','ROLE_STAFF')">
+                <a href="/word/list">
+                    <i class="nc-icon nc-map-big"></i>
+                    <p>말씀 관리</p>
+                </a>
+            </li>
+            <li th:classappend="${navi eq 'account' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_ADMIN')">
+                <a href="/account/list">
+                    <i class="nc-icon nc-settings-gear-65"></i>
+                    <p>관리자</p>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</div>
+</html>

@@ -1,0 +1,19 @@
+<nav aria-label="Page navigation">
+	<ul class='pagination justify-content-center' th:if="${!#lists.isEmpty(page.content)}">
+		<li class="page-item" th:classappend="${page.firstPage}? 'disabled' : ''">
+			<a class="page-link first" th:href='@{${page.url}(page=0,size=${page.size})}'>&lt;&lt;</a>
+		</li>
+		<li class="page-item" th:classappend="${page.hasPreviousPage}? '' : 'disabled'">
+			<a class="page-link prev" th:href='@{${page.url}(page=${page.number-1},size=${page.size})}' title='Go to previous page'>&lt;</a>
+		</li>
+		<li class="page-item" th:each='item : ${page.items}' th:classappend="${item.current}? 'active' : ''">
+			<a class="page-link" th:href='@{${page.url}(page=${item.number},size=${page.size})}'><span class="pageOver" th:text='${item.number + 1}'>1</span></a>
+		</li>
+		<li class="page-item" th:classappend="${page.hasNextPage}? '' : 'disabled'">
+			<a class="page-link next" th:href='@{${page.url}(page=${page.number+1},size=${page.size})}' title='Go to next page'>&gt;</a>
+		</li>
+		<li class="page-item" th:classappend="${page.lastPage}? 'disabled' : ''">
+			<a class="page-link last" th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>&gt;&gt;</a>
+		</li>
+	</ul>
+</nav>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <object th:replace="/common/include"></object>
+    <title>MMS 관리자</title>
+    <link href="/css/demo.css" rel="stylesheet"/>
+    <style>
+        .checkboxTitle {
+            font-size: 18px;
+            padding: 8px 10px 4px 10px !important;
+        }
+        .checkboxTitle input {
+            margin-right: 10px;
+        }
+        .license, .mouse-over, .counseling-title {
+            cursor: pointer;
+        }
+        .card-user .card-body {
+            min-height: 130px;
+        }
+
+        .mouse-over:hover {
+            color: #e5490b;
+        }
+        .page-link {
+            padding: 0.1rem 0.4rem !important;
+        }
+        .gender-title label {
+            margin-bottom: 0 !important;
+        }
+
+        #connectModal #connect-name {
+            height: 40px;
+        }
+
+        #connectModal .card {
+            border: 1px solid #f1f1f1;
+        }
+
+        #connectModal .mouse-over .row {
+            height: 33px;
+        }
+
+        #connectModal .mouse-over {
+            border-bottom: 1px solid #e7e5e5;
+        }
+
+        .radio {
+            margin-right: 10px;
+        }
+
+        .mouse-over:not(:first-child) {
+            padding-top: 12px;
+        }
+
+        .mouse-over .radio {
+            margin-bottom: 7px;
+        }
+
+
+
+        .counseling-li {
+            border-bottom: 1px solid #e0e2e3;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+        .remove-connect, .delete-counseling {
+            background-color: #ef8157;
+            color: white;
+            padding: 3px;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        #relation-name {
+            color: #0037ff;
+
+        }
+
+        .list-div-button{
+            padding-left: 5px;
+        }
+
+        .avatar2 {
+            width: 400px;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .card-user {
+            background-color: #7ed6a5;
+            margin-top: 15px;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+        .card-user .author {
+            margin-top: 0px;
+        }
+        .camera-icon {
+            width: 50%;
+            cursor: pointer;
+        }
+        .camera-span {
+            position: absolute;
+            right: -10px;
+        }
+        #image {
+            display: none;
+        }
+
+        @media screen and (max-width: 500px) {
+            .custom-col-3 {
+                padding-left: 13px;
+                padding-right: 13px;
+            }
+
+
+
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="content">
+        <div class="col-md-12">
+            <div class="card card-user">
+                <div class="card-body">
+                    <div class="author">
+                        <img class="avatar2 border-gray" src="/img/temp/tommy.png" id="profile-image" th:src="|${#strings.isEmpty(user.thumbnail) ? '/img/default-avatar.png' : user.thumbnail}|" alt="...">
+                        <form id="fileUploadForm" enctype="multipart/form-data">
+                            <input type="hidden" name="secure" th:value="${user.secure}">
+                            <h5 class="title">
+                                <span th:text="|${user.reName}|">주님만</span> <span th:if="${!#strings.isEmpty(user.reName)}">(</span><span th:text="${user.realName}">홍길동</span><span th:if="${!#strings.isEmpty(user.reName)}">)</span>
+                                <span class="camera-span pull-right"><label for="image"><img src="/img/camera.png" class="camera-icon"/></label></span>
+                                <input type="file" name="image" id="image" accept="image/*"/>
+                            </h5>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    const color = [[${color}]];
+</script>
+<script src="/js/check_view.js"></script>
+</body>
+
+</html>

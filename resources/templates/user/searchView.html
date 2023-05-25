@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <object th:replace="/common/include"></object>
+    <title>MMS 관리자</title>
+    <link href="/css/demo.css" rel="stylesheet"/>
+    <style>
+
+        .checkboxTitle input {
+            margin-right: 10px;
+        }
+
+        .card-user .card-body {
+            min-height: 130px;
+        }
+
+
+        .gender-title label {
+            margin-bottom: 0 !important;
+        }
+
+        #connectModal #connect-name {
+            height: 40px;
+        }
+
+        #connectModal .card {
+            border: 1px solid #f1f1f1;
+        }
+
+        #connectModal .mouse-over .row {
+            height: 33px;
+        }
+
+        #connectModal .mouse-over {
+            border-bottom: 1px solid #e7e5e5;
+        }
+
+        .mouse-over .radio {
+            margin-bottom: 7px;
+        }
+
+        .avatar2 {
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        @media screen and (max-width: 500px) {
+
+
+
+
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+
+    <div th:replace="/include/slidebar"></div>
+
+    <div class="main-panel">
+
+        <div th:replace="/include/navbar"></div>
+
+        <div class="content">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-user">
+                        <div class="image">
+                            <img src="/img/wmd2.jpg" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <div class="author">
+                                <img class="avatar2 border-gray" src="/img/temp/tommy.png" th:src="|${#strings.isEmpty(user.thumbnail) ? '/img/default-avatar.png' : user.thumbnail}|" alt="...">
+                                <h5 class="title"><span th:text="${user.reName}">주님만</span> <span th:if="${!#strings.isEmpty(user.reName)}">(</span><span th:text="${user.realName}">홍길동</span><span th:if="${!#strings.isEmpty(user.reName)}">)</span></h5>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <hr>
+                            <div class="button-container">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-5 col-5">
+                                        <h6 th:text="${user.department.name}">가정국</h6>
+                                    </div>
+                                    <div class="col-lg-3 col-md-4 col-4">
+                                        <h6 th:text="${user.gender eq 'M' ? '남성' : '여성'}">남성</h6>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-3">
+                                        <h6 th:text="|${user.age}세|">50세</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-8">
+                    <div class="card card-user">
+                        <div class="card-header">
+                            <h5 class="card-title">회원 Profile</h5>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row" sec:authorize="hasAnyRole('ROLE_SUPREME')">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>소속교회</label>
+                                        <select name="code" class="form-control form-select" id="code" aria-label="교회선택" disabled>
+                                            <option value=""></option>
+                                            <option th:each="list:${codeList}" th:value="${list.code}" th:text="${list.name}" th:selected="${list.code eq user.code}">새벽별교회</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group multi-input-first">
+                                        <label>이름(본명)</label>
+                                        <input type="text" class="form-control" readonly th:value="${user.realName}">
+                                        <input type="hidden" id="secure" th:value="${user.secure}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl-1">
+                                    <div class="form-group multi-input-last">
+                                        <label>이름(바뀐이름)</label>
+                                        <input type="text" class="form-control" readonly th:value="${user.reName}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 pr-1">
+                                    <div class="form-group multi-input-first">
+                                        <label>부서</label>
+                                        <input type="text" class="form-control" value="가정국" readonly th:value="${user.department.name}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 px-1">
+                                    <div class="form-group multi-input-center">
+                                        <label>성별</label>
+                                        <input type="text" class="form-control" value="남성" readonly th:value="${user.gender eq 'M' ? '남성' : '여성'}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pl-1">
+                                    <div class="form-group multi-input-last">
+                                        <label>연락처</label>
+                                        <input type="text" class="form-control" value="010-2842-3999" readonly th:value="${user.strPhone}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="update ml-auto mr-auto">
+                                    <a href="/userList" th:href="@{${session.userList}}" type="button" class="btn btn-primary btn-round">목록보기</a>
+                                    <button type="button" class="btn btn-danger" id="enrollAttend" th:if="${(dayOfWeekNumber eq 3 || dayOfWeekNumber eq 7) && checkAttend eq false}" th:text="${dayOfWeekNumber eq 3 ? '수요예배출석' : '일요예배출석'}">출석체크</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="/include/footer"></footer>
+
+    </div>
+</div>
+<script>
+    $(function(){
+
+        $(document).on('click','#enrollAttend',function(){
+            const _secure = $('#secure').val();
+            $.ajax({
+                type: 'post',
+                url: '/enrollAttend',
+                data: {secure:_secure},
+                beforeSend: function () {
+                    $.run_waitMe($('body'));
+                },
+                complete: function () {
+                    $('body').waitMe('hide');
+                },
+                success: function (data) {
+                    if(data.checkAttend === true){
+                        alert('출석체크 하였습니다.');
+                    }else if(data.checkAttend === false){
+                        alert('출석체크가 되지 않았습니다.');
+                    }
+
+                },
+                error: function () {
+                    alert('다시 시도해 주세요.');
+                }
+            });
+        });
+
+    });
+
+</script>
+</body>
+
+</html>

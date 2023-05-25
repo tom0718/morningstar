@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<object th:replace="/common/include"></object>
+<title>새벽별</title>
+	<style>
+		body{
+			background-color:#f4f3ef;
+			font-size:14px;
+			color: #13288e;
+		}
+		.simple-login-container{
+			width:300px;
+			max-width:100%;
+			margin:50px auto;
+		}
+		.simple-login-container h2{
+			text-align:center;
+			font-size:20px;
+		}
+
+		.simple-login-container .btn-login{
+			background-color: #5975ff;
+			color:#fff;
+		}
+		a{
+			color:#fff;
+		}
+		#attend-div {
+			display: none;
+		}
+		#reason-div {
+			display: none;
+		}
+
+	</style>
+</head>
+<body>
+	<form id="form" method="post" action="/checkView">
+		<input type="hidden" name="secure" id="secure"/>
+		<input type="hidden" name="worshipType" id="worshipType"/>
+		<div class="simple-login-container" id="login-div">
+			<h2>MMS Login</h2>
+			<div class="row">
+				<div class="col-md-3">
+					<label class="col-form-label">이&nbsp;&nbsp;&nbsp;름 :</label>
+				</div>
+				<div class="col-md-9">
+					<input type="text" name="name" id="name" class="form-control" placeholder="이름을 입력하세요.">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<label class="col-form-label">핸드폰 :</label>
+				</div>
+				<div class="col-md-9">
+					<input type="text" name="phone" id="phone" placeholder="핸드폰번호를 입력하세요." class="form-control" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<button type="button" class="btn btn-block btn-login" id="login">로그인</button>
+				</div>
+			</div>
+		</div>
+		<div class="simple-login-container" id="attend-div">
+			<h2>출석체크</h2>
+			<div class="row">
+				<div class="col-md-12">
+					<label class="col-form-label" id="worshipTitle">주일예배 :</label>
+				</div>
+				<div class="col-md-12 form-inline">
+					<input type="radio" name="attendType" class="attendType" id="main" value="mainChurch">&nbsp;
+					<label for="main" class="col-form-label">본교회</label>&nbsp;&nbsp;&nbsp;
+					<input type="radio" name="attendType" class="attendType" id="another" value="anotherChurch">&nbsp;
+					<label for="another" class="col-form-label">타교회</label>&nbsp;&nbsp;&nbsp;
+					<input type="radio" name="attendType" class="attendType" id="online" value="online">&nbsp;
+					<label for="online" class="col-form-label">온라인</label>&nbsp;&nbsp;&nbsp;
+					<input type="radio" name="attendType" class="attendType" id="document" value="document">&nbsp;
+					<label for="document" class="col-form-label">말씀전달</label>
+				</div>
+				<div class="col-md-12">
+					<input type="radio" name="attendType" class="attendType" id="absence" value="absence">&nbsp;
+					<label for="absence" class="col-form-label">참석못함</label>
+				</div>
+			</div>
+			<div class="row" id="reason-div">
+				<div class="col-md-12">
+					<input type="text" name="reason" id="reason" placeholder="사유를 입력하세요." class="form-control" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 form-group">
+					<button type="button" class="btn btn-block btn-login" id="attend">확인</button>
+				</div>
+			</div>
+		</div>
+	</form>
+<script src="/js/check.js"></script>
+</body>
+</html>

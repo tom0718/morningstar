@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <object th:replace="/common/include"></object>
+    <title>MMS 관리자</title>
+    <link href="/css/demo.css" rel="stylesheet"/>
+    <style>
+        .checkboxTitle {
+            font-size: 18px;
+            padding: 8px 10px 4px 10px !important;
+        }
+        .checkboxTitle input {
+            margin-right: 10px;
+        }
+        .license, .mouse-over, .counseling-title {
+            cursor: pointer;
+        }
+        .card-user .card-body {
+            min-height: 130px;
+        }
+
+        .mouse-over:hover {
+            color: #e5490b;
+        }
+        .page-link {
+            padding: 0.1rem 0.4rem !important;
+        }
+        .gender-title label {
+            margin-bottom: 0 !important;
+        }
+
+        #connectModal #connect-name {
+            height: 40px;
+        }
+
+        #connectModal .card {
+            border: 1px solid #f1f1f1;
+        }
+
+        #connectModal .mouse-over .row {
+            height: 33px;
+        }
+
+        #connectModal .mouse-over {
+            border-bottom: 1px solid #e7e5e5;
+        }
+
+        .radio {
+            margin-right: 10px;
+        }
+
+        .mouse-over:not(:first-child) {
+            padding-top: 12px;
+        }
+
+        .mouse-over .radio {
+            margin-bottom: 7px;
+        }
+
+
+
+        .counseling-li {
+            border-bottom: 1px solid #e0e2e3;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+        .remove-connect, .delete-counseling {
+            background-color: #ef8157;
+            color: white;
+            padding: 3px;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        #relation-name {
+            color: #0037ff;
+
+        }
+
+        .list-div-button{
+            padding-left: 5px;
+        }
+
+        @media screen and (max-width: 500px) {
+            .custom-col-3 {
+                padding-left: 13px;
+                padding-right: 13px;
+            }
+
+
+
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+
+    <div th:replace="/include/slidebar"></div>
+
+    <div class="main-panel">
+
+        <div th:replace="/include/navbar"></div>
+
+        <div class="content">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-user">
+                        <div class="image">
+                            <img src="/img/wmd2.jpg" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <div class="author">
+                                <a href="/user/downloadFile" th:href="@{/user/downloadFile(id=${user.seqNo})}">
+                                    <input type="hidden" id="userSeqNo" th:value="${user.seqNo}">
+                                    <input type="hidden" id="userName" th:value="${#strings.isEmpty(user.reName) ? user.realName : user.reName}">
+                                    <img class="avatar border-gray" src="/img/temp/tommy.png" th:src="|${#strings.isEmpty(user.thumbnail) ? '/img/default-avatar.png' : user.thumbnail}|" alt="...">
+                                    <h5 class="title"><span th:text="${user.reName}">주님만</span> <span th:if="${!#strings.isEmpty(user.reName)}">(</span><span th:text="${user.realName}">홍길동</span><span th:if="${!#strings.isEmpty(user.reName)}">)</span></h5>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <hr>
+                            <div class="button-container">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-5 col-5">
+                                        <h6 th:text="${user.department.name}">가정국</h6>
+                                    </div>
+                                    <div class="col-lg-3 col-md-4 col-4">
+                                        <h6 th:text="${user.gender eq 'M' ? '남성' : '여성'}">남성</h6>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-3">
+                                        <h6 th:text="|${user.age}세|">50세</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title d-inline">가족관계</h4>
+                            <button type="button" class="btn btn-primary btn-sm d-inline pull-right" id="connectModalPop">가족연결</button>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled team-members">
+                                <li class="" th:each="list:${familyList}">
+                                    <div class="row">
+                                        <div class="col-md-2 col-2">
+                                            <div class="avatar">
+                                                <img src="/img/temp/faces/ayo-ogunseinde-2.jpg" th:src="${list.relation.thumbnail}" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 col-5">
+                                            <a href="" sec:authorize="hasAnyRole('ROLE_PASTOR','ROLE_SUPREME')" th:href="@{'/user/view/'+${list.relation.secure}}">
+                                                <span th:text="${#strings.isEmpty(list.relation.reName) ? list.relation.realName : list.relation.reName}">주님만</span>
+                                            </a>
+                                            <span sec:authorize="hasAnyRole('ROLE_STAFF')" th:text="${#strings.isEmpty(list.relation.reName) ? list.relation.realName : list.relation.reName}">주님만</span>
+                                            <span th:text="|(${list.relation.age}세)|"></span>
+                                            <br />
+                                            <span class="text-muted"><small th:text="${list.name}">아버지</small></span>
+                                        </div>
+                                        <div class="col-md-5 col-5 text-right" th:inline="text">
+                                            [[${list.relation.department.name}]]
+                                            <span class="remove-connect" th:attr="data-me=${list.me},data-family=${list.family}">해제</span>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card" sec:authorize="hasAnyRole('ROLE_PASTOR')">
+                        <div class="card-header">
+                            <h4 class="card-title d-inline">상담목록</h4>
+                            <button type="button" class="btn btn-primary btn-sm d-inline pull-right" id="counseling">상담작성</button>
+                        </div>
+                        <div class="card-body" id="counseling-div"></div>
+                    </div>
+
+                </div>
+                <div class="col-md-8">
+                    <div class="card card-user">
+                        <div class="card-header">
+                            <h5 class="card-title">회원 Profile</h5>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row" sec:authorize="hasAnyRole('ROLE_SUPREME')">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>소속교회</label>
+                                        <select name="code" class="form-control form-select" id="code" aria-label="교회선택" disabled>
+                                            <option value=""></option>
+                                            <option th:each="list:${codeList}" th:value="${list.code}" th:text="${list.name}" th:selected="${list.code eq user.code}">새벽별교회</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 pr-1">
+                                    <div class="form-group multi-input-first">
+                                        <label>출생일</label>
+                                        <input type="text" class="form-control" value="1972-04-22" readonly th:value="${#dates.format(user.birthday,'yyyy-MM-dd')}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 px-1">
+                                    <div class="form-group multi-input-center">
+                                        <label>성별</label>
+                                        <input type="text" class="form-control" value="남성" readonly th:value="${user.gender eq 'M' ? '남성' : '여성'}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pl-1">
+                                    <div class="form-group multi-input-last">
+                                        <label>혈액형</label>
+                                        <input type="text" class="form-control" value="A형" readonly th:value="|${user.blood}형|">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 pr-1">
+                                    <div class="form-group multi-input-first">
+                                        <label>부서</label>
+                                        <select class="form-control form-select" aria-label="부서선택" disabled>
+                                            <option value=""></option>
+                                            <option th:each="list:${departmentList}" th:selected="${user.departmentSeqNo eq list.id}" th:text="${list.name}">은하수</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 px-1">
+                                    <div class="form-group multi-input-center">
+                                        <label>수료일</label>
+                                        <input type="text" class="form-control" value="1991-07-18" readonly th:value="${#dates.format(user.completionDate,'yyyy-MM-dd')}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pl-1">
+                                    <div class="form-group multi-input-last">
+                                        <label>연락처</label>
+                                        <input type="text" class="form-control" value="010-2842-3999" readonly th:value="${user.phone}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 pr-1">
+                                    <div class="form-group multi-input-first">
+                                        <label>사명</label>
+                                        <input type="text" class="form-control" value="" readonly th:value="${user.mission}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 px-1">
+                                    <div class="form-group multi-input-center">
+                                        <label>신급</label>
+                                        <input type="text" class="form-control" value="장로" readonly th:value="${user.religiousLevel}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pl-1">
+                                    <div class="form-group multi-input-last">
+                                        <label>2세여부</label>
+                                        <input type="text" class="form-control" value="2세아님" readonly th:value="${user.secondGeneration eq 1 ? '2세' : (user.secondGeneration eq 2 ? '장년부2세' : '2세아님')}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 pr-1">
+                                    <div class="form-group multi-input-first">
+                                        <label>스타</label>
+                                        <input type="text" class="form-control" value="" readonly th:value="${user.star}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 px-1">
+                                    <div class="form-group multi-input-center">
+                                        <label>특수부서</label>
+                                        <input type="text" class="form-control" value="" readonly th:value="${user.specialUnit}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pl-1">
+                                    <div class="form-group multi-input-last">
+                                        <label>신학기수</label>
+                                        <input type="text" class="form-control" value="" readonly th:value="${user.theology}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group multi-input-first">
+                                        <label>이전교회</label>
+                                        <input type="text" class="form-control" value="주소망교회" readonly th:value="${user.earlierChurch}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 px-1">
+                                    <div class="form-group multi-input-last">
+                                        <label>전입일</label>
+                                        <input type="text" class="form-control" value="" readonly th:value="${#dates.format(user.transferDate,'yyyy-MM-dd')}">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group multi-input-first">
+                                        <label>가족관계</label>
+                                        <div class="form-control form-inline">
+                                            <span class="btn btn-outline-light" th:each="list:${user.familyList}" th:inline="text">
+                                                [[${list.title}]]
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group multi-input-first">
+                                        <label>섭리가족</label>
+                                        <div class="form-control form-inline">
+                                            <span class="btn btn-outline-light" th:each="list:${user.providenceList}" th:inline="text">
+                                                [[${list.title}]] [[${list.name}]]
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group multi-input-first">
+                                        <label>학교</label>
+                                        <input type="text" class="form-control" value="" readonly th:value="${user.school}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 px-1">
+                                    <div class="form-group multi-input-last">
+                                        <label>전공</label>
+                                        <input type="text" class="form-control" value="" readonly th:value="${user.major}">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group multi-input-first">
+                                        <label>직업</label>
+                                        <input type="text" class="form-control" value="" readonly th:value="${user.job}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 px-1">
+                                    <div class="form-group multi-input-last">
+                                        <label>회사명</label>
+                                        <input type="text" class="form-control" value="" readonly th:value="${user.company}">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group multi-input-first">
+                                        <label>특이사항</label>
+                                        <textarea class="form-control textarea" readonly th:text="${user.talent}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl-1">
+                                    <div class="form-group multi-input-last">
+                                        <label>특징 및 기타</label>
+                                        <textarea class="form-control textarea" readonly th:text="${user.feature}"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group" id="license">
+                                        <label>자격증</label>
+                                        <div class="input-group" th:each="list,loop:${user.licenseList}">
+                                            <input type="text" class="form-control" th:value="${list.name}" disabled>
+                                        </div>
+                                        <div class="input-group" th:if="${#lists.isEmpty(user.licenseList)}">
+                                            <input type="text" class="form-control" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>주소</label>
+                                        <input type="text" class="form-control" value="경기도 남양주시 다산동" readonly th:value="${user.address}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>공적</label>
+                                        <textarea class="form-control textarea" readonly th:text="${user.credit}"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>비고</label>
+                                        <textarea class="form-control textarea" readonly th:text="${user.note}"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="update ml-auto mr-auto">
+                                    <a href="/user/list" th:href="@{${session.user}}" type="button" class="btn btn-primary btn-round">목록보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="/include/footer"></footer>
+
+    </div>
+</div>
+<div th:replace="/user/counseling_modal"></div>
+<div th:replace="/user/connect_modal"></div>
+
+<script src="/js/user_view.js"></script>
+<script th:inline="javascript">
+    /* <![CDATA[ */
+
+
+
+    /* ]]> */
+</script>
+</body>
+
+</html>

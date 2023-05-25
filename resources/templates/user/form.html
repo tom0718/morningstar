@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <object th:replace="/common/include"></object>
+    <title>MMS 관리자</title>
+    <link href="/css/demo.css" rel="stylesheet"/>
+    <style>
+        .checkboxTitle {
+            font-size: 18px;
+            padding: 8px 10px 4px 10px !important;
+        }
+        .checkboxTitle input {
+            margin-right: 10px;
+        }
+        .license, #view-thumbnail {
+            cursor: pointer;
+        }
+        .fstselected {
+            height: 36px;
+        }
+        input[type=date] {
+            padding-top: 8px !important;
+            padding-bottom: 8px !important;
+        }
+        .multi-input-last{
+            margin-right: 12px;
+        }
+        #family-div, #providence-div {
+            min-height: 40px;
+        }
+        .delete-item {
+            padding: 5px 5px 5px 7px;
+            background-color: #9ea0a2;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .department-span {
+            cursor: text;
+        }
+        #family-div span, #providence-div span {
+            padding-right: 7px;
+        }
+        .card-user .image img {
+            border-radius: 0;
+        }
+    </style>
+</head>
+
+<body class="">
+<div class="wrapper ">
+
+    <div th:replace="/include/slidebar"></div>
+
+    <div class="main-panel">
+
+        <div th:replace="/include/navbar"></div>
+
+        <div class="content">
+            <div class="row">
+                <form id="form" method="post" action="/user/regist" enctype="multipart/form-data">
+                    <input type="hidden" name="seqNo" id="seqNo" th:value="${user.seqNo}"/>
+                    <div class="col-md-12">
+                        <div class="card card-user">
+                            <div class="card-header">
+                                <h5 class="card-title">회원 Profile</h5>
+                            </div>
+                            <div class="image">
+                                <img src="/img/wmd.jpg" alt="...">
+                            </div>
+                            <div class="card-body">
+                                <div class="author">
+                                    <input type="file" name="thumbnailFile" id="thumbnailFile" accept="image/*" onchange="setThumbnail(event);" style="display: none;"/>
+                                    <input type="hidden" name="thumbnail" id="thumbnail" th:value="${user.thumbnail}"/>
+                                    <a href="javascript:;" id="thumbnail-a">
+                                        <label for="thumbnailFile">
+                                            <img src="/img/default-avatar.png" class="avatar border-gray" id="view-thumbnail" th:src="|${user.thumbnail}|" alt="...">
+                                        </label>
+                                    </a>
+                                </div>
+
+                                <div class="row" sec:authorize="hasAnyRole('ROLE_SUPREME')">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>* 교회선택</label>
+                                            <select name="code" class="form-control form-select" id="code" aria-label="교회선택">
+                                                <option value="">교회선택</option>
+                                                <option th:each="list:${codeList}" th:value="${list.code}" th:text="${list.name}" th:selected="${list.code eq user.code}">새벽별교회</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 pr-1">
+                                        <div class="form-group multi-input-first">
+                                            <label>이름(본명) <span class="text-danger">*</span></label>
+                                            <input type="text" name="realName" class="form-control" id="realName" placeholder="본명을 입력하세요." th:value="${user.realName}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pl-1">
+                                        <div class="form-group multi-input-last">
+                                            <label>이름(바뀐이름)</label>
+                                            <input type="text" name="reName" class="form-control" placeholder="개명을 입력하세요." th:value="${user.reName}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 pr-1">
+                                        <div class="form-group multi-input-first">
+                                            <label>출생일 <span class="text-danger">*</span></label>
+                                            <input type="date" name="birthday" class="form-control" id="birthday" placeholder="출생일을 입력하세요." value="" minlength="10" maxlength="10" th:value="${#dates.format(user.birthday,'yyyy-MM-dd')}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 px-1">
+                                        <div class="form-group multi-input-center">
+                                            <label>성별 <span class="text-danger">*</span></label>
+                                            <select name="gender" class="form-control form-select" id="gender" aria-label="성별선택">
+                                                <option value="">성별선택</option>
+                                                <option value="M" th:selected="${user.gender eq 'M'}">남성</option>
+                                                <option value="F" th:selected="${user.gender eq 'F'}">여성</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 pl-1">
+                                        <div class="form-group multi-input-last">
+                                            <label>혈액형</label>
+                                            <select name="blood" class="form-control form-select" id="blood" aria-label="혈액형선택">
+                                                <option value="">혈액형선택</option>
+                                                <option value="A" th:selected="${user.blood eq 'A'}">A</option>
+                                                <option value="AB" th:selected="${user.blood eq 'AB'}">AB</option>
+                                                <option value="B" th:selected="${user.blood eq 'B'}">B</option>
+                                                <option value="O" th:selected="${user.blood eq 'O'}">O</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 pr-1">
+                                        <div class="form-group multi-input-first">
+                                            <label>부서 <span class="text-danger">*</span></label>
+                                            <select name="departmentSeqNo" class="form-control form-select" id="department" aria-label="부서선택">
+                                                <option value="${session.mms.part}">부서선택</option>
+                                                <option th:if="${session.mms.part eq 'staff'}" th:each="list:${departmentList}" th:value="${list.departmentId}" th:selected="${user.departmentSeqNo eq list.departmentId}" th:text="${list.department.name}">은하수</option>
+                                                <option th:if="${session.mms.part ne 'staff'}" th:each="list:${departmentList}" th:value="${list.id}" th:selected="${user.departmentSeqNo eq list.id}" th:text="${list.name}">은하수</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 px-1">
+                                        <div class="form-group multi-input-center">
+                                            <label>수료일</label>
+                                            <input type="date" name="completionDate" class="form-control" id="completionDate" placeholder="수료일을 입력하세요." th:value="${#dates.format(user.completionDate,'yyyy-MM-dd')}" minlength="10" maxlength="10">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 pl-1">
+                                        <div class="form-group multi-input-last">
+                                            <label>연락처 <span class="text-danger">*</span></label>
+                                            <input type="text" name="phone" class="form-control" placeholder="연락처를 입력하세요." id="phoneNumber" th:value="${user.phone}" maxlength="13">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 pr-1">
+                                        <div class="form-group multi-input-first">
+                                            <label>사명 <span class="text-danger">*</span></label>
+                                            <select name="mission" class="form-control form-select" id="mission" aria-label="사명선택">
+                                                <option value="">사명선택</option>
+                                                <option value="단장" th:selected="${user.mission eq '단장'}">단장</option>
+                                                <option value="구장" th:selected="${user.mission eq '구장'}">구장</option>
+                                                <option value="팀장" th:selected="${user.mission eq '팀장'}">팀장</option>
+                                                <option value="조장" th:selected="${user.mission eq '조장'}">조장</option>
+                                                <option value="기타" th:selected="${user.mission eq '기타'}">기타</option>
+                                                <option value="없음" th:selected="${user.mission eq '없음'}">없음</option>
+                                                <option value="교역자" th:selected="${user.mission eq '교역자'}">교역자</option>
+                                                <option value="부교역자" th:selected="${user.mission eq '부교역자'}">부교역자</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 px-1">
+                                        <div class="form-group multi-input-center">
+                                            <label>신급 <span class="text-danger">*</span></label>
+                                            <select name="religiousLevel" class="form-control form-select" id="religiousLevel" aria-label="신급선택">
+                                                <option value="">신급선택</option>
+                                                <option value="목사" th:selected="${user.religiousLevel eq '목사'}">목사</option>
+                                                <option value="강도사" th:selected="${user.religiousLevel eq '강도사'}">강도사</option>
+                                                <option value="전도사" th:selected="${user.religiousLevel eq '전도사'}">전도사</option>
+                                                <option value="교육전도사" th:selected="${user.religiousLevel eq '교육전도사'}">교육전도사</option>
+                                                <option value="장로" th:selected="${user.religiousLevel eq '장로'}">장로</option>
+                                                <option value="권사" th:selected="${user.religiousLevel eq '권사'}">권사</option>
+                                                <option value="명예장로" th:selected="${user.religiousLevel eq '명예장로'}">명예장로</option>
+                                                <option value="명예권사" th:selected="${user.religiousLevel eq '명예권사'}">명예권사</option>
+                                                <option value="없음" th:selected="${user.religiousLevel eq '없음'}">없음</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 pl-1">
+                                        <div class="form-group multi-input-last">
+                                            <label>2세여부 <span class="text-danger">*</span></label>
+                                            <div class="form-control checkboxTitle">
+                                                <label class="form-check-inline checkbox-inline"><input type="radio" name="secondGeneration" value="1" th:checked="${user.secondGeneration eq 1}"> 2세</label>
+                                                <label class="form-check-inline checkbox-inline"><input type="radio" name="secondGeneration" value="2" th:checked="${user.secondGeneration eq 2}"> 장년부2세</label>
+                                                <label class="form-check-inline checkbox-inline"><input type="radio" name="secondGeneration" value="3" th:checked="${user.secondGeneration eq 3}"> 2세아님</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 pr-1">
+                                        <div class="form-group multi-input-first">
+                                            <label>스타</label>
+                                            <select name="star" class="form-control form-select" aria-label="스타선택">
+                                                <option value="">스타선택</option>
+                                                <option th:each="list:${starList}" th:value="${list}" th:selected="${user.star eq list}" th:text="${list}">스타1차</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 px-1">
+                                        <div class="form-group multi-input-center">
+                                            <label>특수부서</label>
+                                            <select name="specialUnit" class="form-control form-select" aria-label="특수부서선택">
+                                                <option value="">특수부서선택</option>
+                                                <option th:each="list:${specialUnitList}" th:value="${list}" th:selected="${user.specialUnit eq list}" th:text="${list}">행복사</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 pl-1">
+                                        <div class="form-group multi-input-last">
+                                            <label>신학기수</label>
+                                            <input type="number" name="theology" class="form-control" placeholder="신학기수를 입력하세요." th:value="${user.theology}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-1">
+                                        <div class="form-group multi-input-first">
+                                            <label>이전교회</label>
+                                            <input type="text" name="earlierChurch" class="form-control" placeholder="이전교회를 입력하세요." th:value="${user.earlierChurch}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 px-1">
+                                        <div class="form-group multi-input-last">
+                                            <label>전입일</label>
+                                            <input type="date" name="transferDate" class="form-control" placeholder="전입일을 입력하세요." th:value="${#dates.format(user.transferDate,'yyyy-MM-dd')}">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-1">
+                                        <div class="form-group multi-input-first">
+                                            <label>가족관계</label>
+                                            <div class="form-inline">
+                                                <select class="form-control fstdropdown-select" id="myFamily">
+                                                    <option value="">가족관계선택</option>
+                                                    <option th:each="list:${relationNameList}" th:value="${list}" th:text="${list}">할아버지</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>* 가족인원</label>
+                                            <div class="form-control form-inline" id="family-div">
+                                                <span class="btn btn-outline-light department-span" th:each="list:${user.familyList}" th:inline="text">
+                                                    [[${list.title}]]
+                                                    <input type="hidden" class="family" th:value="${list.title}"/>
+                                                    <span class="delete-item">X</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 pr-1">
+                                        <div class="form-group multi-input-first">
+                                            <label>섭리 가족관계</label>
+                                            <select class="form-control form-select fstdropdown-select" id="myProvidence">
+                                                <option value="">가족관계선택</option>
+                                                <option th:each="list:${relationNameList}" th:value="${list}" th:text="${list}">할아버지</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 px-1">
+                                        <div class="form-group multi-input-last">
+                                            <label>가족성명</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" placeholder="가족이름을 입력하세요." id="providenceName" aria-describedby="addProvidence">
+                                                <span class="input-group-text" id="addProvidence">추가</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>섭리 가족인원</label>
+                                            <div class="form-control form-inline" id="providence-div">
+
+                                                <span class="btn btn-outline-light department-span" th:each="list:${user.providenceList}" th:inline="text">
+                                                    [[${list.title}]] [[${list.name}]]
+                                                    <input type="hidden" class="providence" th:value="${list.title}"/>
+                                                    <input type="hidden" class="providenceName" th:value="${list.name}"/>
+                                                    <span class="delete-item">X</span>
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-1">
+                                        <div class="form-group multi-input-first">
+                                            <label>학교</label>
+                                            <input type="text" name="school" class="form-control" placeholder="학교를 입력하세요." th:value="${user.school}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 px-1">
+                                        <div class="form-group multi-input-last">
+                                            <label>전공</label>
+                                            <input type="text" name="major" class="form-control" placeholder="전공을 입력하세요." th:value="${user.major}">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-1">
+                                        <div class="form-group multi-input-first">
+                                            <label>직업 <span class="text-danger">*</span></label>
+                                            <select name="job" class="form-control form-select" id="job" aria-label="직업선택">
+                                                <option value="">직업선택</option>
+                                                <option th:each="job:${jobList}" th:value="${job}" th:selected="${user.job eq job}" th:text="${job}">법무</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 px-1">
+                                        <div class="form-group multi-input-last">
+                                            <label>회사명</label>
+                                            <input type="text" name="company" class="form-control" placeholder="회사명을 입력하세요." th:value="${user.company}">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-1">
+                                        <div class="form-group multi-input-first">
+                                            <label>특이사항</label>
+                                            <textarea name="talent" class="form-control textarea" placeholder="특이사항을 입력하세요." maxlength="500" th:text="${user.talent}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pl-1">
+                                        <div class="form-group multi-input-last">
+                                            <label>특징 및 기타</label>
+                                            <textarea name="feature" class="form-control textarea" placeholder="특징, 기타를 입력하세요." maxlength="500" th:text="${user.feature}"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group" id="license">
+                                            <label>자격증</label>
+                                            <div class="input-group mb-3" th:each="list,loop:${user.licenseList}">
+                                                <input type="text" class="form-control license" placeholder="자격증을 입력하세요." th:attr="aria-describedby='license'+${loop.count}" th:value="${list.name}">
+                                                <span class="input-group-text" th:classappend="${loop.index eq 0 ? 'license-plus' : 'license-minus'}" th:id="|license${loop.count}|" th:text="${loop.index eq 0 ? '+' : '-'}">+</span>
+                                            </div>
+                                            <div class="input-group mb-3" th:if="${#lists.isEmpty(user.licenseList)}">
+                                                <input type="text" class="form-control license" placeholder="자격증을 입력하세요." aria-describedby="license1">
+                                                <span class="input-group-text license-plus" id="license1">+</span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>주소 <span class="text-danger">*</span></label>
+                                            <input type="text" name="address" class="form-control" id="address" placeholder="주소를 입력하세요." th:value="${user.address}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>공적</label>
+                                            <textarea name="credit" class="form-control textarea" placeholder="공적을 입력하세요." maxlength="500" th:text="${user.credit}"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>비고</label>
+                                            <textarea name="note" class="form-control textarea" maxlength="500" th:text="${user.note}"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="update ml-auto mr-auto">
+                                        <button type="button" class="btn btn-primary btn-round" id="save">등록</button>
+                                        <a th:href="@{${session.user}}" type="button" class="btn btn-default btn-round" id="back">목록</a>
+                                        <button type="button" class="btn btn-danger btn-round" id="deleteUser" th:if="${user.seqNo ne null}">삭제</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <footer th:replace="/include/footer"></footer>
+
+    </div>
+</div>
+
+<script src="/js/user.js"></script>
+<script th:inline="javascript">
+    /* <![CDATA[ */
+
+    let part = /*[[${session.mms.part}]]*/;
+
+    /* ]]> */
+</script>
+</body>
+
+</html>

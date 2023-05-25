@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <object th:replace="/common/include"></object>
+    <title>말씀 관리자</title>
+    <link href="/css/demo.css" rel="stylesheet"/>
+    <style>
+        .checkboxTitle {
+            font-size: 18px;
+            padding: 8px 10px 4px 10px !important;
+        }
+        .checkboxTitle input {
+            margin-right: 10px;
+        }
+        .keyword-plus, .keyword-minus{
+            cursor: pointer;
+        }
+
+        .multi-input-last {
+            margin-right: 10px;
+        }
+
+        ul#pictureUl li {
+            list-style: none;
+            width: 300px;
+            float: left;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .items {
+            position: relative;
+        }
+
+        .close_item {
+            position: absolute;
+            right: 0px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .close_i {
+            background-color: white;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width:960px){
+            .multi-input-last {
+                margin-left : 0;
+            }
+
+        }
+    </style>
+</head>
+
+<body class="body">
+<div class="wrapper ">
+
+    <div th:replace="/include/slidebar"></div>
+
+    <div class="main-panel">
+
+        <div th:replace="/include/navbar"></div>
+
+        <div class="content">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="card card-user">
+                        <div class="image">
+                            <img src="/img/wmd3.jpeg" alt="...">
+                        </div>
+                        <div class="card-header">
+                            <h5 class="card-title">말씀 등록</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="form" method="post" th:action="${action}" enctype="multipart/form-data">
+                                <input type="hidden" name="seqNo" th:value="${word.seqNo}">
+                                <div class="row code-div">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>* 말씀구분</label>
+                                            <select name="type" class="form-control form-select" id="type" aria-label="말씀구분">
+                                                <option value="">구분선택</option>
+                                                <option th:each="list:${typeList}" th:value="${list}" th:text="${list}" th:selected="${list eq word.type}">주일말씀</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>* 제목</label>
+                                            <input type="text" name="title" id="title" class="form-control" placeholder="제목을 입력해 주세요." th:value="${word.title}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>부제목</label>
+                                            <input type="text" name="subTitle" id="subTitle" class="form-control" placeholder="부제목을 입력해 주세요." th:value="${word.subTitle}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>성경</label>
+                                            <input type="text" name="bible" id="bible" class="form-control" placeholder="성경을 구절을 입력해 주세요." th:value="${word.bible}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>날짜</label>
+                                            <input type="date" name="serviceDate" id="serviceDate" class="form-control" placeholder="말씀날짜를 입력해 주세요." th:value="${#dates.format(word.serviceDate,'yyyy-MM-dd')}">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group" id="keyword">
+                                            <label>키워드</label>
+                                            <div class="input-group mb-3" th:each="tag,loop:${#strings.arraySplit(word.keyword,':')}">
+                                                <input type="text" class="form-control keyword" placeholder="키워드를 입력하세요." th:attr="aria-describedby='keyword${loop.count}'" th:value="${tag}">
+                                                <span class="input-group-text" th:classappend="${loop.count eq 1 ? 'keyword-plus' : 'keyword-minus'}" th:id="|keyword${loop.count}|" th:text="${loop.count eq 1 ? '+' : '-'}">+</span>
+                                            </div>
+
+                                            <div class="input-group mb-3" th:if="${#strings.isEmpty(word.keyword)}">
+                                                <input type="text" class="form-control keyword" placeholder="키워드를 입력하세요." aria-describedby="keyword1">
+                                                <span class="input-group-text keyword-plus" id="keyword1">+</span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row picture-row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>사진자료</label>
+                                            <div class="input-group mb-3">
+                                                <input type="file" class="form-control picture" id="picture" multiple accept="image/jpeg,jpg,png,gif" aria-describedby="picture1" onchange="setPicture(event);">
+                                                <span class="input-group-text picture-plus" id="picture1">사진선택</span>
+                                            </div>
+                                            <div id="pictureDiv">
+                                                <ul id="pictureUl">
+                                                    <li class="items" th:each="list:${imageList}">
+                                                        <div class="close_btn close_item" ><i class="nc-icon nc-simple-remove close_i"></i></div>
+                                                        <input type="hidden" class="imageList" />
+                                                        <input type="hidden" class="imageNameList" th:value="${list.image}"/>
+                                                        <input type="hidden" class="originList" th:value="${list.fileName}"/>
+                                                        <img th:src="|/repository/${list.image}|" class="img" alt="">
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row contents-row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>* 내용</label>
+                                            <textarea name="contents" class="form-control textarea" id="contents" placeholder="말씀내용을 입력하세요." th:text="${word.contents}" style="height:500px; max-height: 500px !important;"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="update ml-auto mr-auto">
+                                        <button type="button" class="btn btn-primary btn-round" id="save">등록</button>
+                                        <button type="button" class="btn btn-danger btn-round" id="delete" th:if="${word.seqNo ne null}">삭제</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer th:replace="/include/footer"></footer>
+
+    </div>
+</div>
+<script th:inline="javascript">
+    /* <![CDATA[ */
+
+    let seqNo = /*[[${word.seqNo}]]*/;
+    let _href = /*[[${session.word}]]*/;
+
+    /* ]]> */
+</script>
+<script src="/js/word.js"></script>
+</body>
+</html>

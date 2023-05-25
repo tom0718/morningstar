@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <object th:replace="/common/include"></object>
+    <title>회원 관리자</title>
+    <link href="/css/demo.css" rel="stylesheet"/>
+    <style>
+        .checkboxTitle {
+            font-size: 18px;
+            padding: 7px 10px 4px 10px !important;
+        }
+        .checkboxTitle input {
+            margin-right: 10px;
+        }
+        #idCheck, #codeCheck, #emailCheck {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="body">
+<div class="wrapper ">
+
+    <div th:replace="/include/slidebar"></div>
+
+    <div class="main-panel">
+
+        <div th:replace="/include/navbar"></div>
+
+        <div class="content">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="card card-user">
+                        <div class="card-header">
+                            <h5 class="card-title">회원 관리자 등록</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="form" method="post">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>* 아이디</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" name="id" class="form-control" id="id" placeholder="아이디를 입력해 주세요." th:value="${account.id}" aria-describedby="idCheck" th:readonly="${not #strings.isEmpty(account.id)}">
+                                                <span class="input-group-text" id="idCheck" th:if="${#strings.isEmpty(account.id)}">ID 체크</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>* 비밀번호 (8~12자리의 영문대문자,소문자,숫자,특수문자)<span th:if="${!#strings.isEmpty(account.id)}"><br>&nbsp;&nbsp;&nbsp;비밀번호는 변경시만 입력하세요.</span></label>
+                                            <input type="text" name="password" class="form-control" id="password" placeholder="비밀번호를 입력해 주세요." th:value="${password}" maxlength="12"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>* 이름</label>
+                                            <input type="text" name="name" id="name" class="form-control" placeholder="이름을 입력해 주세요." th:value="${account.name}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>* 전화번호</label>
+                                            <input type="text" name="phone" class="form-control" id="phoneNumber" placeholder="전화번호를 입력해 주세요." th:value="${account.phone}" maxlength="13">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>* 이메일(이메일은 중복불가-ID,비번찾기에 사용)</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" name="email" class="form-control" id="email" placeholder="이메일을 입력해 주세요." aria-describedby="emailCheck" th:value="${account.email}">
+                                                <span class="input-group-text" id="emailCheck">이메일 체크</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="update ml-auto mr-auto">
+                                        <button type="button" class="btn btn-primary btn-round" id="save">계정 수정</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer th:replace="/include/footer"></footer>
+
+    </div>
+</div>
+<script src="/js/profile.js"></script>
+</body>
+</html>

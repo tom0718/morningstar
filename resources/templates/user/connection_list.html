@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<ul class="list-unstyled team-members">
+    <li class="mouse-over" th:each="list:${page.content}">
+        <div class="row">
+            <div class="col-md-3 col-3 form-inline">
+                <div class="radio">
+                    <input type="radio" name="connection" class="checked-radio" th:value="${list.seqNo}">
+                </div>
+                <div class="avatar click-div">
+                    <img src="/img/temp/faces/joe-gardner-2.jpg" th:src="${list.thumbnail}" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                </div>
+            </div>
+            <div class="col-md-5 col-5 click-div" th:text="|${#strings.isEmpty(list.reName) ? list.realName : list.reName} ${list.age}세 ${list.gender eq 'M' ? '남성' : '여성'}|">
+                김아내 48세 여성
+            </div>
+            <div class="col-md-4 col-4 text-right click-div" th:text="${list.department.name}">
+                가정국
+            </div>
+        </div>
+    </li>
+</ul>
+<div th:replace="/include/pagenation3"></div>

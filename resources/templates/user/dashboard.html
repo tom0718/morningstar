@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <object th:replace="/common/include"></object>
+    <title>MMS 관리자</title>
+    <link href="/css/demo.css" rel="stylesheet"/>
+</head>
+
+<body class="">
+<div class="wrapper ">
+
+    <div th:replace="/include/slidebar"></div>
+
+    <div class="main-panel">
+
+        <div th:replace="/include/navbar"></div>
+
+        <div class="content">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card ">
+                        <div class="card-header ">
+                            <h5 class="card-title" th:text="|총인원 : ${totalCount}명|">총인원(100명)</h5>
+                        </div>
+                        <div class="card-body ">
+                            <canvas id="chartGender" width="400" height="150"></canvas>
+                        </div>
+                        <div class="card-footer ">
+                            <div class="legend">
+                                <i class="fa fa-circle text-primary"></i> 남성<span id="male"></span>
+                                <i class="fa fa-circle text-warning"></i> 여성<span id="female"></span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card card-chart">
+                        <div class="card-header">
+                            <h5 class="card-title">연령별 인원</h5>
+                            <p class="card-category"></p>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="chartAge" width="400" height="100"></canvas>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card ">
+                        <div class="card-header ">
+                            <h5 class="card-title">부서별 인원</h5>
+                            <p class="card-category"></p>
+                        </div>
+                        <div class="card-body ">
+                            <canvas id="chartDepartment" width="400" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card ">
+                        <div class="card-header ">
+                            <h5 class="card-title">직업별 인원</h5>
+                            <p class="card-category"></p>
+                        </div>
+                        <div class="card-body ">
+                            <canvas id="chartJob" width="400" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-chart">
+                        <div class="card-header ">
+                            <h5 class="card-title">스타</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="chartStar" width="400" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card card-chart">
+                        <div class="card-header">
+                            <h5 class="card-title">특수부서</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="chartSpecialUnit" width="400" height="100"></canvas>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <footer th:replace="/include/footer"></footer>
+
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    /* <![CDATA[ */
+
+    let genderList = /*[[${genderList}]]*/;
+    let ageCount = /*[[${ageCount}]]*/;
+    let departmentList = /*[[${departmentCountList}]]*/;
+    let departmentNameList = /*[[${departmentNameList}]]*/;
+    let jobItem = /*[[${jobItem}]]*/;
+    let specialUnitItem = /*[[${specialUnitItem}]]*/;
+    let starItem = /*[[${starItem}]]*/;
+
+    let jobList = /*[[${jobList}]]*/;
+    let starList = /*[[${starList}]]*/;
+    let specialUnitList = /*[[${specialUnitList}]]*/;
+
+
+
+    /* ]]> */
+
+</script>
+
+<script src="/js/dashboard.js"></script>
+
+</body>
+
+</html>

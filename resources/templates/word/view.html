@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <object th:replace="/common/include"></object>
+    <title>말씀 관리자</title>
+    <link href="/css/demo.css" rel="stylesheet"/>
+    <style>
+        .multi-input-last {
+            margin-right: 10px;
+        }
+
+        ul#pictureUl li {
+            list-style: none;
+            width: 300px;
+            float: left;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .red {
+            color : red;
+        }
+
+        .text-div {
+            padding : 7px;
+            width: 100%;
+            border: #ecebeb 1px solid;
+            border-radius: 3px;
+        }
+
+        .text-span {
+            padding : 7px;
+            margin-right: 10px;
+            border: #ecebeb 1px solid;
+            border-radius: 3px;
+        }
+
+        pre.text-div {
+            font-size: 15px;
+        }
+        .img {
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body class="body">
+<div class="wrapper ">
+
+    <div th:replace="/include/slidebar"></div>
+
+    <div class="main-panel">
+
+        <div th:replace="/include/navbar"></div>
+
+        <div class="content">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="card card-user">
+                        <div class="image">
+                            <img src="/img/wmd3.jpeg" alt="...">
+                        </div>
+                        <div class="card-header">
+                            <h5 class="card-title">말씀 보기</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row code-div">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>* 말씀구분</label>
+                                        <div class="text-div" th:utext="${word.type}">title</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>* 제목</label>
+                                        <div class="text-div" th:utext="${word.title}">title</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" th:unless="${#strings.isEmpty(word.subTitle)}">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>부제목</label>
+                                        <div class="text-div" th:utext="${word.subTitle}">title</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" th:unless="${#strings.isEmpty(word.bible)}">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>성경</label>
+                                        <div class="text-div" th:utext="${word.bible}">title</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" th:if="${word.serviceDate ne null}">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>날짜</label>
+                                        <div class="text-div" th:text="${#dates.format(word.serviceDate,'yyyy-MM-dd')}">2021-01-01</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" th:unless="${#strings.isEmpty(word.keyword)}">
+                                <div class="col-md-12">
+                                    <div class="form-group" id="keyword">
+                                        <label>키워드</label>
+                                        <div class="input-group mb-3" >
+                                            <span class="text-span" th:each="tag,loop:${#strings.arraySplit(word.keyword,':')}" th:utext="${tag}"></span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row picture-row" th:if="${word.type eq '사진자료'}">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>사진자료</label>
+                                        <div id="pictureDiv">
+                                            <ul id="pictureUl">
+                                                <li class="items" th:each="list:${imageList}">
+                                                    <img th:src="|/repository/${list.image}|" class="img" th:attr="data-seq=${list.seqNo}" alt="">
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row contents-row" th:if="${word.type ne '사진자료'}">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>* 내용</label>
+                                        <pre class="text-div" th:utext="${word.contents}"></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="update ml-auto mr-auto">
+                                    <a th:href="@{${session.word}}" type="button" class="btn btn-primary btn-round" id="save">목록</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer th:replace="/include/footer"></footer>
+
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <!--Modal body with image-->
+            <div class="modal-body">
+                <img src="gfg.png" />
+            </div>
+
+            <div class="modal-footer">
+                <a href="/word/downloadFile" type="button" class="btn btn-success" id="download">다운로드</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+       $(document).on('click','.img',function(){
+           let src = $(this).attr('src');
+           let seqNo = $(this).data('seq');
+           $('.modal-body img').attr('src', src);
+           $('#download').attr('href','/word/downloadFile?seqNo='+seqNo);
+           $('#exampleModal').modal('show');
+       });
+    });
+</script>
+</body>
+</html>

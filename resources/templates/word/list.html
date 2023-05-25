@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <object th:replace="/common/include"></object>
+    <title>MMS 관리자</title>
+    <link href="/css/demo.css" rel="stylesheet"/>
+    <style>
+        .user-item {
+            cursor: pointer;
+        }
+        .checkboxTitle {
+            font-size: 18px;
+            padding: 8px 10px 4px 10px !important;
+        }
+        .checkboxTitle input {
+            margin-right: 10px;
+        }
+        .card .avatar {
+            margin-bottom: 0 !important;
+        }
+        .red {
+            color:red;
+        }
+
+    </style>
+</head>
+
+<body class="">
+<div class="wrapper ">
+
+    <div th:replace="/include/slidebar"></div>
+
+    <div class="main-panel">
+
+        <div th:replace="/include/navbar"></div>
+
+        <div class="content">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-user">
+
+                        <div class="card-body">
+                            <form method="post" action="/word/list">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>구분</label>
+                                            <select name="type" class="form-control form-select" id="type" aria-label="구분선택">
+                                                <option value="">구분선택</option>
+                                                <option th:each="list:${typeList}" th:value="${list}" th:text="${list}" th:selected="${list eq type}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>시작일</label>
+                                            <input type="date" name="start" class="form-control" placeholder="시작일을 입력하세요." th:value="${start}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>종료일</label>
+                                            <input type="date" name="end" class="form-control" placeholder="종료일을 입력하세요." th:value="${end}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>단어</label>
+                                            <input type="text" name="word" class="form-control" onkeyup="enterkey();" th:value="${word}">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="update ml-auto mr-auto">
+                                        <button type="submit" class="btn btn-primary">검색</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title d-inline" th:inline="text"> 말씀 목록 ([[${page.totalCount}]]개)</h4>
+                            <a class="d-inline pull-right" href="/word/form"><button type="button" class="btn btn-sm btn-default">말씀 등록</button></a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <colgroup>
+                                        <col width="5%;">
+                                        <col width="20%;">
+                                        <col width="auto;">
+                                        <col width="20%;">
+                                        <col width="12%;">
+                                    </colgroup>
+                                    <thead class="text-primary">
+                                    <th>No</th>
+                                    <th>구분</th>
+                                    <th>제목</th>
+                                    <th>날짜</th>
+                                    <th class="text-right">수정</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="user-item" th:each="list,loop:${page.content}" th:attr="data-seq=${list.seqNo}, data-word=${word}">
+                                        <td class="list-td" th:text="${page.totalCount-((page.number)*page.size+loop.count)+1}">
+                                            1
+                                        </td>
+                                        <td class="list-td" th:text="${list.type}">
+                                            주일말씀
+                                        </td>
+                                        <td class="list-td" th:utext="${list.title}">
+                                            생명을 사랑하라
+                                        </td>
+                                        <td class="list-td" th:text="${#dates.format(list.serviceDate,'yyyy-MM-dd')}">
+                                            2021.01.01
+                                        </td>
+                                        <td class="text-right">
+                                            <a th:href="@{|/word/modify/${list.seqNo}|}" class="btn btn-primary btn-sm">수정</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div th:replace="/include/pagenation"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer th:replace="/include/footer"></footer>
+
+    </div>
+</div>
+
+<script src="/js/word_list.js"></script>
+</body>
+
+</html>

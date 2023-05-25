@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <object th:replace="/common/include"></object>
+    <title>MMS 관리자</title>
+    <link href="/css/demo.css" rel="stylesheet"/>
+    <style>
+        .user-item {
+            cursor: pointer;
+        }
+        .checkboxTitle {
+            font-size: 18px;
+            padding: 8px 10px 4px 10px !important;
+        }
+        .checkboxTitle input {
+            margin-right: 10px;
+        }
+        .card .avatar {
+            margin-bottom: 0 !important;
+        }
+    </style>
+</head>
+
+<body class="">
+<div class="wrapper ">
+
+    <div th:replace="/include/slidebar"></div>
+
+    <div class="main-panel">
+
+        <div th:replace="/include/navbar"></div>
+
+        <div class="content">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-user">
+
+                        <div class="card-body">
+                            <form method="post" action="/user/list">
+
+                                <div class="row" sec:authorize="hasAnyRole('ROLE_SUPREME')">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>교회</label>
+                                            <select name="code" class="form-control form-select" id="code" aria-label="교회선택">
+                                                <option value="">교회선택</option>
+                                                <option value="S0001" th:each="list:${codeList}" th:value="${list.code}" th:text="${list.name}" th:selected="${list.code eq code}">새벽별교회</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>이름(본명/개명)</label>
+                                            <input type="text" name="name" class="form-control" th:value="${name}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_PASTOR')">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>부서</label>
+                                            <select name="department" class="form-control form-select" id="division" aria-label="부서선택">
+                                                <option value="0">부서선택</option>
+                                                <option th:each="list:${departmentList}" th:value="${list.id}" th:text="${list.name}" th:selected="${list.id eq department}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_PASTOR')">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>스타</label>
+                                            <select name="star" class="form-control form-select" aria-label="스타선택">
+                                                <option value="">스타선택</option>
+                                                <option th:each="list:${starList}" th:value="${list}" th:selected="${star eq list}" th:text="${list}">스타1차</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>특수부서</label>
+                                            <select name="specialUnit" class="form-control form-select" id="specialUnit" aria-label="특수선택">
+                                                <option value="">특수부서선택</option>
+                                                <option th:each="list:${specialUnitList}" th:value="${list}" th:selected="${specialUnit eq list}" th:text="${list}">행복사</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>직업</label>
+                                            <select name="job" class="form-control form-select" id="job" aria-label="직업선택">
+                                                <option value="">직업선택</option>
+                                                <option th:each="list:${jobList}" th:value="${list}" th:selected="${job eq list}" th:text="${list}">법무</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" sec:authorize="hasAnyRole('ROLE_SUPREME','ROLE_PASTOR')">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>성별</label>
+                                            <div class="form-control checkboxTitle">
+                                                <label class="form-check-inline checkbox-inline"><input type="checkbox" name="gender" value="M" th:checked="${#strings.contains(gender, 'M')}"> 남성</label>
+                                                <label class="form-check-inline checkbox-inline"><input type="checkbox" name="gender" value="F" th:checked="${#strings.contains(gender, 'F')}"> 여성</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>나이</label>
+                                            <input type="number" name="age" class="form-control" th:value="${age}" maxlength="3">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="update ml-auto mr-auto">
+                                        <button type="submit" class="btn btn-primary">검색</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title d-inline" th:inline="text"> 회원 목록 ([[${page.totalCount}]]명)</h4>
+                            <a class="d-inline pull-right" href="/user/form"><button type="button" class="btn btn-sm btn-default">회원 등록</button></a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class=" text-primary">
+                                    <th>Image</th>
+                                    <th>이름</th>
+                                    <th>부서</th>
+                                    <th>나이</th>
+                                    <th>연락처</th>
+                                    <th class="text-right">수정</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="user-item" th:each="list:${page.content}" th:attr="data-secure=${list.secure}">
+                                        <td>
+                                            <div class="avatar">
+                                                <img src="/img/temp/faces/ayo-ogunseinde-2.jpg" th:src="${#strings.isEmpty(list.thumbnail) ? '/img/default-avatar.png' : list.thumbnail}" class="img-circle img-no-padding img-responsive">
+                                            </div>
+                                        </td>
+                                        <td th:text="${#strings.isEmpty(list.reName) ? list.realName : list.reName}">
+                                            홍길동 전도사
+                                        </td>
+                                        <td th:text="${list.department.name}">
+                                            대학부
+                                        </td>
+                                        <td th:text="${list.age}">
+                                            25
+                                        </td>
+                                        <td th:text="${list.phone}">
+                                            010-1004-1004
+                                        </td>
+                                        <td class="text-right">
+                                            <a th:href="@{'/user/modify/'+${list.secure}}" class="btn btn-primary btn-sm">수정</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div th:replace="/include/pagenation"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer th:replace="/include/footer"></footer>
+
+    </div>
+</div>
+
+<script src="/js/user_list.js"></script>
+</body>
+
+</html>
