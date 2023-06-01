@@ -303,50 +303,66 @@ function setData(type, rentRoom, rentRoomList){
     console.log('type', type);
     console.log('rentRoom', rentRoom);
 
-    const _startTime = $('#rentStartTime');
-    const _endTime = $('#rentEndTime');
+
 
     let roomName = '';
 
     if(type === 'event'){ // 신청한것 수정화면
-        $('#purpose').val(rentRoom.purpose);
-
-        let _time1 = rentRoom.startTime; // 12:00:00
-        let _time2 = rentRoom.endTime; // 12:00:00
-
-        _startTime.val(_time1).prop('selected', true);
-        _endTime.val(_time2).prop('selected', true);
-
         roomName = rentRoom.room;
     }else{ // 등록화면
         roomName = 'S1';
     }
 
-    $('#roomName').val(roomName).prop('selected', true);
+    if((type === 'event' && _id === rentRoom.register) || type === 'date'){
 
-    if(rentRoomList.length > 0){
+        $('#purpose').val(rentRoom.purpose);
 
-        $.each(rentRoomList, function(index, item){
+        let _time1 = rentRoom.startTime; // 12:00:00
+        let _time2 = rentRoom.endTime; // 12:00:00
 
-            _startTime.find('option').each(function(i){
-                let _start = $(this);
-                $.each(item.startTimeList, function(j, time){
-                    if(_start.val() === time.rentTime && rentRoom.seqNo !== time.rentRoomSeqNo){ //  && _id === rentRoom.register
-                        _start.prop('disabled', true);
-                    }
+        const _startTime = $('#rentStartTime');
+        const _endTime = $('#rentEndTime');
+
+        _startTime.val(_time1).prop('selected', true);
+        _endTime.val(_time2).prop('selected', true);
+
+        $('#roomName').val(roomName).prop('selected', true);
+
+        if(rentRoomList.length > 0){
+
+            $.each(rentRoomList, function(index, item){
+
+                _startTime.find('option').each(function(i){
+                    let _start = $(this);
+                    $.each(item.startTimeList, function(j, time){
+                        if(_start.val() === time.rentTime && rentRoom.seqNo !== time.rentRoomSeqNo){ //  && _id === rentRoom.register
+                            _start.prop('disabled', true);
+                        }
+                    });
+                });
+
+                _endTime.find('option').each(function(i){
+                    let _end = $(this);
+                    $.each(item.endTimeList, function(j, time){
+                        if(_end.val() === time.rentTime && rentRoom.seqNo !== time.rentRoomSeqNo){ //  && _id === rentRoom.register
+                            _end.prop('disabled', true);
+                        }
+                    });
                 });
             });
+        }
 
-            _endTime.find('option').each(function(i){
-                let _end = $(this);
-                $.each(item.endTimeList, function(j, time){
-                    if(_end.val() === time.rentTime && rentRoom.seqNo !== time.rentRoomSeqNo){ //  && _id === rentRoom.register
-                        _end.prop('disabled', true);
-                    }
-                });
-            });
-        });
+        $('#event-modal').modal('show');
+    }else{
+
+        $('#departmentView').text(rentRoom.depart.group3+(''));
+        $('#roomNameView').text(roomName);
+        $('#rentDateView').text(rentRoom.rentDate);
+        $('#rentTimeView').text(rentRoom.startTime + ' ' + rentRoom.endTime);
+        $('#purposeView').text(rentRoom.purpose);
+
+        $('#event-view-modal').modal('show');
     }
 
-    $('#event-modal').modal('show');
+
 }

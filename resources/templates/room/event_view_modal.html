@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div class="modal fade" id="event-view-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">룸대여</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="departmentView" class="col-form-label">신청부서:</label>
+                        <div class="form-inline" id="departmentView">SS</div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="roomNameView" class="col-form-label">신청룸:</label>
+                        <div class="form-control" id="roomNameView">S1</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rentDateView" class="col-form-label">신청일:</label>
+                        <div class="form-inline" id="rentDateView">2023-05-31</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rentTimeView" class="col-form-label">사용시간:</label>
+                        <div class="form-inline" id="rentTimeView">12:00 ~ 14:30</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="purposeView" class="col-form-label">사용목적:</label>
+                        <div id="purposeView">단합 모임</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
